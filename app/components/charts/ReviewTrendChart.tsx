@@ -1,30 +1,7 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
-
-// const generateData = () => {
-// 	const startDate = new Date("2024-10-01");
-// 	const endDate = new Date("2024-10-24");
-// 	const data = [];
-
-// 	for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
-// 		data.push({
-// 			date: date.toISOString().split("T")[0],
-// 			top1: Math.floor(Math.random() * 5) + 1,
-// 			top2: Math.floor(Math.random() * 5) + 1,
-// 			top3: Math.floor(Math.random() * 5) + 1,
-// 			top4: Math.floor(Math.random() * 5) + 1,
-// 			top5: Math.floor(Math.random() * 5) + 1,
-// 			top6: Math.floor(Math.random() * 5) + 1,
-// 			cvr: (Math.random() * 2 + 2).toFixed(2),
-// 		});
-// 	}
-
-// 	return data;
-// };
-
-// const data = generateData();
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine } from "recharts";
 
 const data = [
 	{
@@ -35,72 +12,87 @@ const data = [
 		top4: 2,
 		top5: 4,
 		top6: 3,
-		cvr: 3.5,
+		cvr: 35.3,
 	},
 	{
 		date: "2024-10-02",
 		top1: 5,
 		top2: 4,
-		top3: 3,
+		top3: 5,
 		top4: 2,
 		top5: 4,
 		top6: 3,
-		cvr: 3.5,
+		cvr: 32.4,
 	},
 	{
 		date: "2024-10-03",
-		top1: 5,
-		top2: 5,
-		top3: 4,
-		top4: 3,
-		top5: 4,
-		top6: 3,
-		cvr: 3.5,
-	},
-	{
-		date: "2024-10-04",
 		top1: 5,
 		top2: 4,
 		top3: 5,
 		top4: 2,
 		top5: 4,
 		top6: 3,
-		cvr: 3.5,
+		cvr: 35.1,
 	},
 	{
-		date: "2024-10-05",
-		top1: 5,
+		date: "2024-10-04",
+		top1: 3,
 		top2: 3,
-		top3: 3,
+		top3: 5,
 		top4: 2,
 		top5: 4,
 		top6: 3,
-		cvr: 3.5,
+		cvr: 18.1,
+		event: "レビュー変動がありました",
+	},
+	{
+		date: "2024-10-05",
+		top1: 3,
+		top2: 3,
+		top3: 5,
+		top4: 2,
+		top5: 4,
+		top6: 3,
+		cvr: 15.2,
 	},
 	{
 		date: "2024-10-06",
 		top1: 5,
 		top2: 4,
-		top3: 4,
-		top4: 3,
+		top3: 3,
+		top4: 4,
 		top5: 4,
 		top6: 3,
-		cvr: 3.5,
+		cvr: 32.6,
+		event: "レビュー変動がありました",
 	},
 	{
 		date: "2024-10-07",
 		top1: 5,
 		top2: 4,
-		top3: 5,
-		top4: 2,
+		top3: 3,
+		top4: 4,
 		top5: 4,
 		top6: 3,
-		cvr: 3.5,
+		cvr: 33.5,
 	},
-]
+];
+
+const CustomLabel = ({ viewBox, label }: { viewBox: any; label: string }) => {
+	return (
+		<g>
+			<text x={viewBox.x} y={viewBox.y - 10} textAnchor="middle" fill="#000" style={{ fontWeight: "bold" }}>
+				{label}
+			</text>
+		</g>
+	);
+};
 
 export function ReviewTrendChart() {
+	const minCvr = Math.floor(Math.min(...data.map(item => item.cvr)));
+	const maxCvr = Math.ceil(Math.max(...data.map(item => item.cvr)));
 	return (
+
 		<Card className="p-6">
 			<h3 className="text-lg font-bold mb-4">トップレビュー推移</h3>
 			<div className="h-[400px]">
@@ -115,19 +107,44 @@ export function ReviewTrendChart() {
 								position: "insideLeft",
 								offset: 10,
 							}}
+							yAxisId={"rating"}
 							ticks={[1, 2, 3, 4, 5]}
 							tickFormatter={(value) => `☆${value}`}
 							domain={[1, 5]}
 						/>
+						<YAxis
+							yAxisId="cvr"
+							orientation="right"
+							label={{
+								value: "CVR",
+								angle: 90,
+								position: "insideRight",
+								offset: 10,
+							}}
+							tickFormatter={(value) => `${value}%`}
+							domain={[0, maxCvr]}
+						/>
 						<Tooltip />
-						<Legend />
-						<Line type="monotone" dataKey="top1" stroke="hsl(var(--chart-1))" name="top1レビュー" />
-						<Line type="monotone" dataKey="top2" stroke="hsl(var(--chart-2))" name="top2レビュー" />
-						<Line type="monotone" dataKey="top3" stroke="hsl(var(--chart-3))" name="top3レビュー" />
-						<Line type="monotone" dataKey="top4" stroke="hsl(var(--chart-4))" name="top4レビュー" />
-						<Line type="monotone" dataKey="top5" stroke="hsl(var(--chart-5))" name="top5レビュー" />
-						<Line type="monotone" dataKey="top6" stroke="hsl(var(--chart-3))" name="top6レビュー" />
-						<Line type="monotone" dataKey="cvr" stroke="hsl(var(--chart-7))" name="CVR" />
+						<Legend
+							verticalAlign="bottom"
+							wrapperStyle={{
+								paddingTop: "20px", // 凡例の上部に余白を追加
+							}}
+						/>
+
+						<ReferenceLine x={data[3].date} yAxisId="rating" stroke="gray" />
+						<ReferenceLine x={data[5].date} yAxisId="rating" stroke="gray" />
+
+						<Line type="monotone" yAxisId="rating" dataKey="top1" stroke="#1f77b4" name="top1レビュー" />
+						<Line type="monotone" yAxisId="rating" dataKey="top2" stroke="#ff7f0e" name="top2レビュー" />
+						<Line type="monotone" yAxisId="rating" dataKey="top3" stroke="#2ca02c" name="top3レビュー" />
+						<Line type="monotone" yAxisId="rating" dataKey="top4" stroke="#9467bd" name="top4レビュー" />
+						<Line type="monotone" yAxisId="rating" dataKey="top5" stroke="#8c564b" name="top5レビュー" />
+						<Line type="monotone" yAxisId="rating" dataKey="top6" stroke="#e377c2" name="top6レビュー" />
+						<Line dataKey="none" yAxisId="rating" stroke="none" name=" " />
+
+						<Line type="monotone" yAxisId="cvr" dataKey="cvr" stroke="#bcbd22" name="CVR" />
+						<Line type="monotone" yAxisId="cvr" dataKey="event" stroke="black" name="イベント" legendType="none" />
 					</LineChart>
 				</ResponsiveContainer>
 			</div>
