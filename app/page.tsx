@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Star, MessageSquare, MessagesSquare } from "lucide-react";
+import { Star, MessageSquare, Calculator, ThumbsUp } from "lucide-react";
 import { DateRange } from "react-day-picker";
 import { MetricsCard } from "./components/metrics/MetricsCard";
 import { RatingDistribution } from "./components/metrics/RatingDistribution";
@@ -86,11 +86,47 @@ export default function Dashboard() {
 					{/* Main Content */}
 					<main className="flex-1 p-6">
 						<div className="font-bold text-2xl mb-5">レビュー分析</div>
-						{/* <div className="grid grid-cols-3 gap-4 mb-6">
-						<MetricsCard icon={Star} title="全体のレーティング" value="4.5" change="前月比 +0.2" iconColor="text-yellow-500" />
-						<RatingDistribution />
-						<MetricsCard icon={MessageSquare} title="レビュー件数" value="1,234" change="前月比 +12" iconColor="text-blue-500" />
-					</div> */}
+						<div className="grid grid-cols-3 gap-4 mb-6">
+							<MetricsCard
+								icon={Star}
+								title="現在のトップレビュー"
+								value={
+									<>
+										<span className="text-yellow-500">☆</span>5
+									</>
+								}
+								change={
+									<div className="flex justify-center gap-2 items-center">
+										<ThumbsUp color="rgb(34, 197, 94)" />
+										Excellent！
+									</div>
+								}
+								iconColor="text-yellow-500"
+								tooltip="現在アプリストアにおいてユーザーに一番最初に表示されるレビューです。このトップレビューはアプリのCVRや広告効果に大きな影響を与えます。"
+							/>
+							<MetricsCard
+								icon={Calculator}
+								title="TOP3のレビューの平均"
+								value="3.4"
+								change="前日比 ---"
+								iconColor="text-blue-500"
+								tooltip="アプリストアにおいて上位3つのレビューの平均値です。上位のレビューほどユーザーの目に留まりやすいので、この値が高いほどアプリのインストール数に寄与します。"
+							/>
+
+							<MetricsCard
+								icon={MessageSquare}
+								title="直近のトップレビューの変化"
+								value={
+									<>
+										<span className="text-yellow-500">☆</span>4 → <span className="text-yellow-500">☆</span>5
+									</>
+								}
+								change="変化が起きた日 2024/10/6"
+								iconColor="text-blue-500"
+								tooltip="直近でトップレビューが変化した際の情報です。もしレビューが悪化している場合は、放置するとアプリのインストール数に大きな影響を与えるので早期に改善することが重要です。"
+							/>
+						</div>
+						<div className="border-b my-4" />
 						<div className="flex justify-end">
 							<DateRangePicker dateRange={dateRange} onSelect={setDateRange} />
 						</div>
