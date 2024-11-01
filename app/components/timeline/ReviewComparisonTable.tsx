@@ -13,9 +13,11 @@ interface ReviewData {
 
 interface ReviewTableProps {
 	reviews: ReviewData[];
+	highlightedIdsPositive?: number[];
+	highlightedIdsNegative?: number[];
 }
 
-function ReviewTable({ reviews }: ReviewTableProps) {
+function ReviewTable({ reviews, highlightedIdsPositive, highlightedIdsNegative }: ReviewTableProps) {
 	return (
 		<Table className="border-collapse border border-slate-500">
 			<thead>
@@ -28,7 +30,10 @@ function ReviewTable({ reviews }: ReviewTableProps) {
 			</thead>
 			<tbody>
 				{reviews.map((review) => (
-					<tr key={review.id}>
+					<tr key={review.id} className={
+						highlightedIdsNegative?.includes(review.id) ? "bg-pink-100" : 
+						highlightedIdsPositive?.includes(review.id) ? "bg-green-50" : ""
+					}>
 						<td className="border border-slate-700 text-sm text-muted-foreground">{review.date}</td>
 						<td className="border border-slate-700 text-yellow-500 whitespace-nowrap">{"★".repeat(review.rating)}</td>
 						<td className="border border-slate-700">{review.title}</td>
@@ -47,18 +52,20 @@ function ReviewTable({ reviews }: ReviewTableProps) {
 interface ReviewComparisonTableProps {
 	beforeReviews: ReviewData[];
 	afterReviews: ReviewData[];
+	highlightedIdsPositive?: number[];
+	highlightedIdsNegative?: number[];
 }
 
-export function ReviewComparisonTable({ beforeReviews, afterReviews }: ReviewComparisonTableProps) {
+export function ReviewComparisonTable({ beforeReviews, afterReviews, highlightedIdsPositive, highlightedIdsNegative }: ReviewComparisonTableProps) {
 	return (
 		<div className="grid grid-cols-2 gap-4 mt-4">
 			<div>
 				<div className="text-sm font-medium mb-2">変更前</div>
-				<ReviewTable reviews={beforeReviews} />
+				<ReviewTable reviews={beforeReviews} highlightedIdsPositive={highlightedIdsPositive} highlightedIdsNegative={highlightedIdsNegative} />
 			</div>
 			<div>
 				<div className="text-sm font-medium mb-2">変更後</div>
-				<ReviewTable reviews={afterReviews} />
+				<ReviewTable reviews={afterReviews} highlightedIdsPositive={highlightedIdsPositive} highlightedIdsNegative={highlightedIdsNegative} />
 			</div>
 		</div>
 	);

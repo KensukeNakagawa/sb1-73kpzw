@@ -122,7 +122,7 @@ export function ReviewTrendChart() {
 								offset: 10,
 							}}
 							tickFormatter={(value) => `${value}%`}
-							domain={[0, maxCvr]}
+							domain={[0, maxCvr + 10]}
 						/>
 						<Tooltip />
 						<Legend
@@ -132,8 +132,8 @@ export function ReviewTrendChart() {
 							}}
 						/>
 
-						<ReferenceLine x={data[3].date} yAxisId="rating" stroke="gray" />
-						<ReferenceLine x={data[5].date} yAxisId="rating" stroke="gray" />
+						<ReferenceLine x={data[3].date} yAxisId="rating" stroke="red" />
+						<ReferenceLine x={data[5].date} yAxisId="rating" stroke="red" />
 
 						<Line type="monotone" yAxisId="rating" dataKey="top1" stroke="#1f77b4" name="top1レビュー" />
 						<Line type="monotone" yAxisId="rating" dataKey="top2" stroke="#ff7f0e" name="top2レビュー" />
