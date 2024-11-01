@@ -92,7 +92,6 @@ export function ReviewTrendChart() {
 	const minCvr = Math.floor(Math.min(...data.map(item => item.cvr)));
 	const maxCvr = Math.ceil(Math.max(...data.map(item => item.cvr)));
 	return (
-
 		<Card className="p-6">
 			<h3 className="text-lg font-bold mb-4">トップレビュー推移</h3>
 			<div className="h-[400px]">
@@ -100,6 +99,12 @@ export function ReviewTrendChart() {
 					<LineChart data={data}>
 						<CartesianGrid strokeDasharray="3 3" />
 						<XAxis dataKey="date" label={{ value: "日付", position: "insideBottom", offset: -10 }} tickFormatter={(value) => new Date(value).toLocaleDateString("ja-JP", { month: "short", day: "numeric" })} />
+						<Tooltip
+							formatter={(value, name) => {
+								if (name === "CVR") return [`${value}%`, name];
+								return [value, name];
+							}}
+						/>
 						<YAxis
 							label={{
 								value: "レーティング",
